@@ -94,7 +94,7 @@ remove_current_dir_from_path() {
 
   while read -rd : dir; do
     if [ -d "$dir" ]; then
-      normalized_dir=$(cd "$dir" && pwd -P)
+      normalized_dir=$(cd "$dir" 2>/dev/null && pwd -P || echo "$dir")
 
       if [ "$normalized_dir" = "$this_dir" ] || [ "$normalized_dir" = "$asdf_shims_dir" ]; then
         continue
