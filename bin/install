@@ -16,6 +16,18 @@ install_nodejs() {
   else
     install_canon_version "$install_type" "$version" "$install_path"
   fi
+
+  # Windows distributables place the binaries in the root directory rather than
+  # a bin directory.
+  if [[ "$(uname)" == MSYS_NT* ]]; then
+    mkdir -p "$install_path/bin"
+    for bin in corepack node npm npx; do
+      cat <<EOT >"$install_path/bin/$bin"
+#!/usr/bin/env bash
+exec "$install_path/$bin" \$@
+EOT
+    done
+  fi
 }
 
 
